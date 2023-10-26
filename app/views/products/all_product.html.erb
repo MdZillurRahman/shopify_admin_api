@@ -1,0 +1,5 @@
+<h1>All product List of your development store</h1>
+
+<% @products.each do |product| %>
+    <p><%= product["node"]["title"] %></p>
+<% end %>

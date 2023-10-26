@@ -1,0 +1,37 @@
+<h1>Add product</h1>
+
+<h3>
+If you want to add extra features than selecct one
+</h3>
+<div class="d-flex gap-3">
+  <%= custom_property_button("media") %>
+  <%= custom_property_button("options") %>
+  <%= custom_property_button("tags") %>
+</div>
+
+<div class="container mt-5">
+  <%= form_tag create_product_path, multipart: true, method: :post do %>
+
+  <%= category_form_field("category","categories", @categories) %>
+  <%= category_form_field("collection","collections", @collections) %>
+
+  <%= custom_div_with_label_and_input_class('proTitle', 'Product Title', 'productTitle', 'form-control') %>
+  
+  <%= custom_div_with_label_and_input_class('proDesc', 'Product Description', 'productDescription', 'form-control') %>
+
+  <%= custom_div_with_label_and_input_class('proPrice', 'Product Price', 'productPrice', 'form-control') %>
+
+  <%= custom_div_with_label_and_input_class('options','Product Options', 'productOptions', 'form-control','d-none') %>
+
+  <%= custom_div_with_label_and_input_class('tags','Product Tags', 'productTags', 'form-control','d-none') %>
+
+  <div class="form-group d-none" id="media">
+    <%= label_tag :files, 'Product Media' %>
+    <%= file_field_tag 'files[]', multiple: true, class:"form-control" %>
+  </div>
+  <%= submit_tag 'Add Product', class: 'btn btn-primary mt-4' %>
+<% end %>
+
+</div>
+
+<%= javascript_include_tag 'custom' %>

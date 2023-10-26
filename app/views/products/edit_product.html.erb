@@ -1,0 +1,25 @@
+<h1> Edit product</h1>
+
+<div class="d-flex justify-content-center ">
+<%= form_tag editProduct_path, method: :patch do %>
+    <div class="form-group text-center">
+      <%= label_tag 'productId', 'Select a product' %>
+      
+    </div>
+    <%= submit_tag 'Select a Product', class: 'btn btn-primary' %>
+  <% end %>
+</div>
+
+<div class="container mt-5">
+  <%= form_tag update_product_path, method: :patch do %>
+    <div class="form-group d-none">
+      <%= label_tag 'productId', 'Product ID' %>
+      <%= text_field_tag 'productId', nil, class: 'form-control', required: true %>
+    </div>
+    <div class="form-group">
+      <%= label_tag 'productPrice', 'New Product Price' %>
+      <%= text_field_tag 'productPrice', nil, class: 'form-control', required: true %>
+    </div>
+    <%= submit_tag 'Update Product', class: 'btn btn-primary' %>
+  <% end %>
+</div>
