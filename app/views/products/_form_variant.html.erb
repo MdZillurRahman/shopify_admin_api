@@ -1,0 +1,14 @@
+  <%
+=begin%>
+ <% if @count > 0 %>
+
+    <% @count.times do |i| %>
+      <%= label_tag "variant_#{i+1}_title", "Variant #{i+1} Title" %>
+      <%= text_field_tag "variant_#{i+1}_title" %><br>
+      <%= label_tag "variant_#{i+1}_price", "Variant #{i+1} Price" %>
+      <%= text_field_tag "variant_#{i}_price" %><br>
+    <% end %>
+
+  <% end %> 
+<%
+=end%>

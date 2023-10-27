@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get '/editProduct', to: 'products#edit_product'
 
   post '/create_product', to: 'products#create_product', as: 'create_product'
+  post '/increase_count', to: 'products#increase_count', as: 'increase_count'
   patch '/update_product', to: 'products#update_product', as: 'update_product'
 
 

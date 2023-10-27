@@ -16,5 +16,12 @@ document.addEventListener("DOMContentLoaded", function() {
         // console.log(inputField)
       });
     });
+
+    const add_variant = document.querySelector(".add_variant");
+    add_variant.addEventListener("click", (e)=>{
+        document.querySelector("count").value = e.target.dataset.value + 1;
+
+
+    })
   });
   

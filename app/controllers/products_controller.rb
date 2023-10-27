@@ -114,17 +114,17 @@ class ProductsController < ApplicationController
   )
     
     @collections = client.query(query: query).body["data"]["collections"]["nodes"]
-    
     end
 
     def create_product
         product_category = params[:category]
-        product_collection = params[:collection]
+        product_collection = params[:collections]
         product_title = params[:productTitle]
         product_description = params[:productDescription]
         product_price = params[:productPrice]
         product_media = params[:files].present? ? params[:files] : nil
         product_options = params[:productOptions].present? ? params[:productOptions] : nil
+        product_tags = params[:productTags].present? ? params[:productTags] : nil
         
         
         session = ShopifyAPI::Auth::Session.new(
@@ -158,24 +158,39 @@ class ProductsController < ApplicationController
         # GQL
 
         media_array = []
+        options_array = []
+        tags_array = []
 
-        params[:files].each do |file, index|
-          # Access the file and content-type from here
-          # puts content_type = file.content_type
-          # puts file_object = file.tempfile.open
+        if product_media.present?
+          product_media.each do |file, index|
+            # Access the file and content-type from here
+            # puts content_type = file.content_type
+            # puts file_object = file.tempfile.open
 
-          data = {
-            "alt": file.original_filename,
-            "mediaContentType": "IMAGE",
-            # "originalSource": file.tempfile.open
-            "originalSource": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgpJGuO4BZFBQF1_vfJtpiYBQxNR6Ud_oRHaOGy8H7&s"
-          }
+            data = {
+              "alt": file.original_filename,
+              "mediaContentType": "IMAGE",
+              # "originalSource": file.tempfile.open
+              "originalSource": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgpJGuO4BZFBQF1_vfJtpiYBQxNR6Ud_oRHaOGy8H7&s"
+            }
 
-          media_array << data
-         
-          # Perform operations on the file as per your requirement
-          # ...
-         end
+            media_array << data
+          
+            # Perform operations on the file as per your requirement
+            # ...
+          end
+        end
+
+
+        # product_options.each do |key, value|
+        #   options_array << value
+        # end
+
+        # product_tags.each do |key, value|
+        #   tags_array << value
+        # end
+
+
 
         query = <<~QUERY
         mutation productCreate($input: ProductInput!) {
@@ -193,9 +208,7 @@ class ProductsController < ApplicationController
         QUERY
         variables = {
           "input": {
-            "collectionsToJoin": [
-              "#{product_collection}"
-            ],
+            "collectionsToJoin": product_collection,
             "descriptionHtml": "#{product_description}",
             "productType": "#{product_category}",
             "published": true,
@@ -205,12 +218,8 @@ class ProductsController < ApplicationController
             #   "description": "",
             #   "title": ""
             # },
-            # "tags": [
-            #   ""
-            # ],
-            "options": [
-              ""
-            ],
+            "options": ["#{product_options}"],
+            "tags": ["#{product_tags}"],            
             "title": "#{product_title}",
             "variants": [
               {
@@ -260,7 +269,7 @@ class ProductsController < ApplicationController
               }
             ]
           },
-          "media": [media_array]
+          "media": media_array
         }
         
       
@@ -269,7 +278,7 @@ class ProductsController < ApplicationController
         # @collections = client.query(query: query).body["data"]["collections"]["nodes"]
         response = client.query(query: query, variables: variables)
 
-        puts response.inspect
+        # puts response.inspect
 
         # if response.present? && response.body['data']['productCreate'].present? && response.body['data']['productCreate']['product'].present?
           

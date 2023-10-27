@@ -4,16 +4,26 @@
 If you want to add extra features than selecct one
 </h3>
 <div class="d-flex gap-3">
-  <%= custom_property_button("media") %>
-  <%= custom_property_button("options") %>
-  <%= custom_property_button("tags") %>
+  <%= custom_property_button("media", "toggle-button") %>
+  <%= custom_property_button("options", "toggle-button") %>
+  <%= custom_property_button("tags", "toggle-button") %>
+  <%= custom_property_button("add_variant","bg-primary text-white add_variant") %>
+  <%
+=begin%>
+ <%= button_to 'Add Variant', increase_count_path %>
+  <%= button_to 'Add Variant', { action: "increase_count" }, method: :post, remote: true %> 
+<%
+=end%>
 </div>
 
 <div class="container mt-5">
-  <%= form_tag create_product_path, multipart: true, method: :post do %>
+  <%= form_tag create_product_path,id:"add_product", multipart: true, method: :post do %>
 
-  <%= category_form_field("category","categories", @categories) %>
-  <%= category_form_field("collection","collections", @collections) %>
+  <%= category_form_field("category", "categories", @categories) %>
+
+  <%= category_form_field("collection", "collections", @collections) %>
+  
+  <%= multiple_select("collection", "collections", @collections) %>
 
   <%= custom_div_with_label_and_input_class('proTitle', 'Product Title', 'productTitle', 'form-control') %>
   
@@ -24,6 +34,22 @@ If you want to add extra features than selecct one
   <%= custom_div_with_label_and_input_class('options','Product Options', 'productOptions', 'form-control','d-none') %>
 
   <%= custom_div_with_label_and_input_class('tags','Product Tags', 'productTags', 'form-control','d-none') %>
+
+  <%= text_field_tag("count", nil, class: "count", type: "hidden") %>
+ 
+  <%
+=begin%>
+ <%= select_tag 'Collections', options_for_select(@collections.map { |collection| ["#{collection["title"]}", "#{collection["id"]}"] }, @selected_country), {include_blank: true, multiple: true, class: "from-control"} %>  
+<%
+=end%>
+  <%
+=begin%>
+ <%= select_tag 'Collections', collection_check_boxes(@collections, :post, @collections, "id", "title", options = {}, html_options = {}), {include_blank: true, multiple: true, class: "from-control"} %>  
+<%
+=end%>
+
+
+
 
   <div class="form-group d-none" id="media">
     <%= label_tag :files, 'Product Media' %>
