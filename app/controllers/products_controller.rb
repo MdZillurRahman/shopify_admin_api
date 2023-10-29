@@ -1,4 +1,6 @@
 class ProductsController < ApplicationController
+    include ApplicationHelper
+
     def all_product
         session = ShopifyAPI::Auth::Session.new(
             shop: 'entry-try-shop.myshopify.com',
@@ -122,9 +124,11 @@ class ProductsController < ApplicationController
         product_title = params[:productTitle]
         product_description = params[:productDescription]
         product_price = params[:productPrice]
+        product_variant_number = params[:count].to_i
         product_media = params[:files].present? ? params[:files] : nil
-        product_options = params[:productOptions].present? ? params[:productOptions] : nil
-        product_tags = params[:productTags].present? ? params[:productTags] : nil
+        product_options = params[:productOptions].present? ? process_options(params[:productOptions]) : nil
+        product_tags = params[:productTags].present? ? process_options(params[:productTags]) : nil
+
         
         
         session = ShopifyAPI::Auth::Session.new(
@@ -160,6 +164,20 @@ class ProductsController < ApplicationController
         media_array = []
         options_array = []
         tags_array = []
+        variant_array = []
+
+        if product_variant_number > 0
+          product_variant_number.times do |i|
+            data = {
+              "title":  params["variant_#{i+1}_title"],
+              "price": params["variant_#{i+1}_price"],
+              "options": process_options(params["variant_#{i+1}_options"])
+            }
+
+            variant_array << data
+          end
+
+        end
 
         if product_media.present?
           product_media.each do |file, index|
@@ -218,11 +236,12 @@ class ProductsController < ApplicationController
             #   "description": "",
             #   "title": ""
             # },
-            "options": ["#{product_options}"],
-            "tags": ["#{product_tags}"],            
+            "options": product_options,
+            "tags": product_tags,            
             "title": "#{product_title}",
-            "variants": [
-              {
+            "variants": variant_array
+            # [
+            #   {
                 # "barcode": "",
                 # "compareAtPrice": "",
                 # "fulfillmentServiceId": "",
@@ -259,15 +278,15 @@ class ProductsController < ApplicationController
                 # "options": [
                 #   ""
                 # ],
-                "position": 1,
-                "price": "#{product_price}",
-                "requiresComponents": false,
-                "requiresShipping": true,
-                "taxable": true,
-                "weight": 1.1,
+                # "position": 1,
+                # "price": "#{product_price}",
+                # "requiresComponents": false,
+                # "requiresShipping": true,
+                # "taxable": true,
+                # "weight": 1.1,
                 # "weightUnit": ""
-              }
-            ]
+            #   }
+            # ]
           },
           "media": media_array
         }
@@ -325,8 +344,11 @@ class ProductsController < ApplicationController
         puts product_title
         puts product_description
         puts product_price
+        puts product_options
+        puts product_variant_number
         puts product_media
         puts media_array
+        puts variant_array
         
         
           
@@ -344,17 +366,9 @@ class ProductsController < ApplicationController
     def edit_product
     end
 
-    # def fetch_products_from_shopify
-    #     session = ShopifyAPI::Auth::Session.new(
-    #         shop: 'entry-try-shop.myshopify.com',
-    #         access_token: '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'
-    #     )
-    #     # client = ShopifyAPI::
-
-    #     # response = 
-    # end
-
     def update_product
     end
+
+
 end
   

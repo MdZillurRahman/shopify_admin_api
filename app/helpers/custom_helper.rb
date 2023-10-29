@@ -1,9 +1,12 @@
 
 module CustomHelper
-    def custom_div_with_label_and_input_class(group_ID, label_text, input_name, input_class, group_display = '')
+    def custom_div_with_label_and_input_class(group_ID, label_text, input_name, input_class, group_display = '', multi_input = false)
       content_tag(:div, class: "form-group #{group_display}", id: group_ID) do
         concat(label_tag(label_text))
         concat(text_field_tag(input_name, nil, class: input_class))
+        if multi_input
+          concat(content_tag(:p, "Please input your #{group_ID} using comma-separated", class: "text-secondary"))
+        end
       end
     end
 
@@ -43,6 +46,13 @@ module CustomHelper
     # end
     
       
+    def process_options(input)
+      if input.present?
+        input.split(',').map(&:strip)
+      else
+        [input]
+      end
+    end
 
 
 

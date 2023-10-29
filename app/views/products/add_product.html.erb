@@ -21,7 +21,11 @@ If you want to add extra features than selecct one
 
   <%= category_form_field("category", "categories", @categories) %>
 
-  <%= category_form_field("collection", "collections", @collections) %>
+  <%
+=begin%>
+ <%= category_form_field("collection", "collections", @collections) %> 
+<%
+=end%>
   
   <%= multiple_select("collection", "collections", @collections) %>
 
@@ -31,11 +35,11 @@ If you want to add extra features than selecct one
 
   <%= custom_div_with_label_and_input_class('proPrice', 'Product Price', 'productPrice', 'form-control') %>
 
-  <%= custom_div_with_label_and_input_class('options','Product Options', 'productOptions', 'form-control','d-none') %>
+  <%= custom_div_with_label_and_input_class('options','Product Options', 'productOptions', 'form-control','d-none', true) %>
 
-  <%= custom_div_with_label_and_input_class('tags','Product Tags', 'productTags', 'form-control','d-none') %>
+  <%= custom_div_with_label_and_input_class('tags','Product Tags', 'productTags', 'form-control','d-none', true) %>
 
-  <%= text_field_tag("count", nil, class: "count", type: "hidden") %>
+  <%= text_field_tag("count", nil, class: "count", type: "hidden", value: "0") %>
  
   <%
 =begin%>
