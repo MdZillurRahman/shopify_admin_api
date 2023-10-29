@@ -17,20 +17,29 @@ document.addEventListener("DOMContentLoaded", function() {
       });
     });
 
-    const productPrice = ()=>{
+    const add_variant = document.querySelector(".add_variant");
+
+    const productPrice = (value)=>{
       if(document.querySelector(".variantPart .form-group")){
         document.querySelector("#proPrice").classList.add("d-none");
+        add_variant.innerText = `Add Variant (${value})`;
       }else{
         document.querySelector("#proPrice").classList.remove("d-none");
+        add_variant.innerText = `Add Variant`;
+        document.querySelector(".remove_variant").replaceWith("");
       }
     }
 
 
-    const add_variant = document.querySelector(".add_variant");
     add_variant.addEventListener("click", (e)=>{
       let val = Number(e.target.dataset.value) + 1;
       e.target.dataset.value = val;
       document.querySelector(".count").value = val;
+      e.target.innerText = `Add Variant (${val})`;
+
+      if(!document.querySelector(".remove_variant")){
+      e.target.insertAdjacentHTML("afterend", "<button class='bg-danger text-white remove_variant'>Remove a variant</button>")
+      }
 
       let newElement =
         `<div class="form-group">
@@ -41,9 +50,9 @@ document.addEventListener("DOMContentLoaded", function() {
           <label for="variant_${val}_options">Variant ${val} Options</label>
           <input type="text" id="variant_${val}_options" name="variant_${val}_options" class="form-control"/>
           <p class="text-secondary">Please input your options using comma-separated</p>
-          <p class="btn btn-danger mt-2 w-full remove_variant">Remove this variant</p>
-        </div>`
-      
+          </div>`
+          
+          // <p class="btn btn-danger mt-2 w-full remove_variant">Remove this variant</p>
 
       let variantPart = 
       `<div class="variantPart">
@@ -58,22 +67,22 @@ document.addEventListener("DOMContentLoaded", function() {
       }else{
         document.querySelector("[type='submit']").insertAdjacentHTML("beforebegin", variantPart);
       }
-      productPrice();
+      productPrice(val);
 
 
     })
 
     window.addEventListener("click",(e)=>{
       if(e.target.classList.contains("remove_variant")){
-        let val = e.target.closest(".variantPart").querySelectorAll(".form-group").length - 1;
+        let val = document.querySelector(".variantPart").querySelectorAll(".form-group").length - 1;
         add_variant.dataset.value = val;
         document.querySelector(".count").value = val;
         if(val === 0){
-          e.target.closest(".variantPart").outerHTML = "";
+          document.querySelector(".variantPart").outerHTML = "";
         }else{
-          e.target.closest(".form-group").outerHTML = "";
+          document.querySelector(".variantPart .form-group:last-child").outerHTML = "";
         }
-        productPrice();
+        productPrice(val);
       }
     })
 
